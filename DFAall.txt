@@ -1,0 +1,674 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DFA
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //OR
+            //int[,] tt1 = new int[,] { { 1, 1 }, { 1, 2 }, { 1, 2 } };
+            //int[,] tt2 = new int[,] { { 1, 3 }, { 0, 2 }, { 3, 1 }, { 2, 0 } };
+            //char[] chars = new char[] { 'a', 'b' };
+            //int initials = 0;
+            //int[] final1 = new int[] { 2 };
+            //int[] final2 = new int[] { 0 };
+            
+            //AND
+            //int[,] tt1 = new int[,] { { 1, 1 }, { 0, 0 } };
+            //int[,] tt2 = new int[,] { { 1, 2 }, { 1, 1 }, { 2, 2 } };
+            //char[] chars = new char[] { 'a', 'b' };
+            //int initials = 0;
+            //int[] final1 = new int[] { 0 };
+            //int[] final2 = new int[] { 1 };
+
+            //Closure
+            //int[,] tt1 = new int[,] { { 1, 1 }, { 0, 2 }, { 1, 2 } };
+            //char[] chars = new char[] { 'a', 'b' };
+            //int initials = 0;
+            //int[] final1 = new int[] { 2 };
+            
+            //Intersection
+
+            int[,] tt1 = new int[,] { { 1, 1 }, { 0, 0 } };
+            int[,] tt2 = new int[,] { { 1, 3 }, { 1, 2 }, { 1, 2 }, { 3, 3 } };
+            char[] chars = new char[] { 'a', 'b' };
+            int initials = 0;
+            int[] final1 = new int[] { 0 };
+            int[] final2 = new int[] { 2 };
+
+            DFA fa1 = new DFA(tt1, final1, chars, initials);
+            DFA fa2 = new DFA(tt2, final2, chars, initials);
+
+            //fa1.displayDFA();
+            //fa2.displayDFA();
+
+
+            Operation f3 = new Operation();
+            //f3.OR(fa1, fa2);
+            //f3.And(fa1, fa2);
+            //f3.Closure(fa1);
+            //f3.Compliment(fa1);
+            f3.intersection(fa1, fa2);
+            f3.displayDFA();
+            
+            Console.ReadKey();
+        }
+    }
+
+    class DFA
+    {
+        public int[,] TransitionTable;
+        public int[] finalStates;
+        public char[] inputCharacters;
+        public int initialState;
+
+        public DFA(int[,] T_T, int[] fs, char[] iC, int init)
+        {
+            TransitionTable = T_T;
+            finalStates = fs;
+            inputCharacters = iC;
+            initialState = init;
+        }
+
+        public int Transition(int state, char ch)
+        {
+            for (int i = 0; i < inputCharacters.Length; i++)
+            {
+                if (ch == inputCharacters[i])
+                {
+                    return TransitionTable[state, i];
+                }
+            }
+            return -1;
+        }
+        public bool CheckDFA(string input)
+        {
+            int Cur_state = initialState;
+            for (int i = 0; i < input.Length; i++)
+            {
+                Cur_state = Transition(Cur_state, input[i]);
+            }
+            for (int i = 0; i < finalStates.Length; i++)
+            {
+                if (Cur_state == finalStates[i])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Check(string In)
+        {
+            if (CheckDFA(In))
+            {
+                Console.WriteLine("Correct Word");
+            }
+            else
+            {
+                Console.WriteLine("InCorrect Word");
+            }
+        }
+        public void displayDFA()
+        {
+            Console.WriteLine("Transition Table/n");
+
+            for (int i = 0; i < TransitionTable.GetLength(0); i++)
+            {
+                Console.Write("S"+i+"\t");
+                for (int j = 0; j < TransitionTable.GetLength(1); j++)
+                {
+                    Console.Write(TransitionTable[i,j]+" ");
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("InputCharacters");
+            for (int i = 0; i < inputCharacters.Length; i++)
+            {
+                Console.Write(inputCharacters[i] + "  ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Initial State = "+ initialState);
+
+            Console.WriteLine("final states:");
+            for (int i = 0; i < finalStates.Length; i++)
+            {
+                Console.Write(finalStates[i] + "  ");
+            }
+            Console.WriteLine();
+        }
+    }
+    class Operation
+    {
+        int[,] TransitionTable;
+        int[] Finalstates;
+        char[] inputCharacters;
+        int initialState;
+
+        public DFA OR(DFA f1, DFA f2)
+        {
+            inputCharacters = f1.inputCharacters;
+            
+            List<int[]> Zstate = new List<int[]>();
+            
+            string state = f1.initialState.ToString() + f2.initialState.ToString();
+            List<string> states = new List<string>();
+            states.Add(state);
+            
+            int s1, s2;
+            for (int z = 0; z < states.Count; z++)
+            {
+                string selectedState = states[z];
+                int[] transition = new int[f1.inputCharacters.Length];
+                for (int i = 0; i < f1.inputCharacters.Length; i++)
+                {
+                    s1 = f1.Transition(Convert.ToInt32(selectedState[0]) - 48, f1.inputCharacters[i]);
+                    s2 = f2.Transition(Convert.ToInt32(selectedState[1]) - 48, f1.inputCharacters[i]);
+                    string chkState = s1.ToString() + s2.ToString();
+                    bool flag = false;
+                    int itrate = 0;
+                    foreach (string s in states)
+                    {
+                        if (s == chkState)
+                        {
+                            flag = true;
+                            break;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                        itrate++;
+                    }
+                    if (!flag)
+                    {
+                        states.Add(chkState);
+                    }
+                    transition[i] = itrate;
+                }
+                
+                Zstate.Add(transition);
+            }
+
+            TransitionTable = new int[Zstate.Count, inputCharacters.Length]; 
+
+
+            for (int i = 0; i < Zstate.Count; i++)
+            {
+                int[] current = Zstate[i];
+                for (int j = 0; j < inputCharacters.Length; j++)
+                {
+                    TransitionTable[i, j] = current[j];
+                }
+            }
+
+
+            this.Finalstates = GetfinalstateOR(f1.finalStates, f2.finalStates, states);
+            
+            DFA f3 = new DFA(TransitionTable, this.Finalstates, inputCharacters, initialState);
+            return f3;
+        }
+
+        public DFA And(DFA f1, DFA f2)
+        {
+            inputCharacters = f1.inputCharacters;
+
+            List<int[]> Zstate = new List<int[]>();
+
+            List<string> states = new List<string>();
+            states.Add(f1.initialState.ToString());
+            string[] Sx = new string[f1.TransitionTable.GetLength(0)];
+            string[] Sy = new string[f2.TransitionTable.GetLength(0)];
+            for (int z = 0; z < states.Count; z++)
+            {
+                string chk_state = states[z];
+                int[] ttArray = new int[inputCharacters.Length];
+                for (int j = 0; j < inputCharacters.Length; j++)
+                {
+                    
+                    List<int> trans_indexX = new List<int>();
+                    List<int> trans_indexY = new List<int>();
+                    for (int k = 0; k < chk_state.Length; k++)
+                    {
+                        if (k == 0)
+                        {
+                            for (int f = 0; f < Sx.Length; f++)
+                            {
+                                if (f == Convert.ToInt32(chk_state[k]) - 48)
+                                {
+
+                                    Sx[f] = f1.Transition(Convert.ToInt32(chk_state[k]) - 48, inputCharacters[j]).ToString();
+
+
+                                    trans_indexX.Add(f);
+                                    for (int finalCheck = 0; finalCheck < f1.finalStates.Length; finalCheck++)
+                                    {
+                                        string singlechar = Sx[f];
+                                        for (int s = 0; s < singlechar.Length; s++)
+                                        {
+                                            if (Convert.ToInt32(singlechar[s] - 48) == f1.finalStates[finalCheck])
+                                            {
+                                                Sy[0] = f2.initialState.ToString();
+                                                trans_indexY.Add(0);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int f = 0; f < Sy.Length; f++)
+                            {
+                                if (f == Convert.ToInt32(chk_state[k]) - 48)
+                                {
+                                    string temp;
+                                    temp = f2.Transition(Convert.ToInt32(chk_state[k]) - 48, inputCharacters[j]).ToString();
+                                    Sy[f] = temp;
+                                    bool flag_sycheck = true;
+                                    for (int checkSy = 0; checkSy < trans_indexY.Count;checkSy++ )
+                                    {
+                                        if (Sy[trans_indexY[checkSy]] == temp)
+                                        {
+                                            flag_sycheck = false;
+                                        }
+                                    }
+                                    if (flag_sycheck == true)
+                                    {
+                                        trans_indexY.Add(f);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    string outcomestate = Sx[trans_indexX[0]];
+                    for (int i = 1; i < trans_indexX.Count; i++)
+                    {
+                        outcomestate += Sx[trans_indexX[i]].ToString();
+                    }
+                    for (int i = 0; i < trans_indexY.Count; i++)
+                    {
+                        outcomestate += Sy[trans_indexY[i]].ToString();
+                    }
+                    outcomestate = sortstring(outcomestate);
+                    bool flag = false;
+                    int itrate = 0;
+                    
+                    foreach (string s in states)
+                    {
+                        if (s == outcomestate)
+                        {
+                            flag = true;
+                            break;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                        itrate++;
+                    }
+                    if (!flag)
+                    {
+                        states.Add(outcomestate);
+                    }
+                    ttArray[j] = itrate;
+                }
+                Zstate.Add(ttArray);
+            }
+            TransitionTable = new int[Zstate.Count, inputCharacters.Length];
+
+
+            for (int i = 0; i < Zstate.Count; i++)
+            {
+                int[] current = Zstate[i];
+                for (int j = 0; j < inputCharacters.Length; j++)
+                {
+                    TransitionTable[i, j] = current[j];
+                }
+            }
+
+            this.Finalstates = GetfinalstateAND(f2.finalStates, states,"");
+
+            DFA f3 = new DFA(TransitionTable, this.Finalstates, inputCharacters, initialState);
+            return f3;
+        }
+
+
+        public DFA Closure(DFA f1)
+        {
+            inputCharacters = f1.inputCharacters;
+
+            List<int[]> Zstate = new List<int[]>();
+
+            List<string> states = new List<string>();
+            
+            states.Add(f1.initialState.ToString() + "f");
+            
+            string[] Sx = new string[f1.TransitionTable.GetLength(0)];
+            string s1;
+            int[] temp = new int[inputCharacters.Length];
+            for (int i = 0; i < inputCharacters.Length;i++)
+            {
+                s1 = f1.Transition(Convert.ToInt32(states[0][0]) - 48, inputCharacters[i]).ToString();
+                for (int j = 0; j < f1.finalStates.Length; j++)
+                {
+                    if (Convert.ToInt32(s1)-48 == f1.finalStates[j])
+                    {
+                        s1 += f1.initialState;
+                    }
+                }
+                bool flag = false;
+                int itrate = 0;
+                
+                foreach (string s in states)
+                {
+                    if (s == s1)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                    itrate++;
+                }
+                if (!flag)
+                {
+                    states.Add(s1);
+                }
+                temp[i] = itrate;
+            }
+            Zstate.Add(temp);
+
+                for (int z = 1; z < states.Count; z++)
+                {
+                    string chk_state = states[z];
+                    int[] ttArray = new int[inputCharacters.Length];
+                    for (int j = 0; j < inputCharacters.Length; j++)
+                    {
+
+                        List<int> trans_indexX = new List<int>();
+                        for (int k = 0; k < chk_state.Length; k++)
+                        {
+
+                            for (int f = 0; f < Sx.Length; f++)
+                            {
+                                if (f == Convert.ToInt32(chk_state[k]) - 48)
+                                {
+
+                                    Sx[f] = f1.Transition(Convert.ToInt32(chk_state[k]) - 48, inputCharacters[j]).ToString();
+
+
+                                    
+
+                                    for (int finalCheck = 0; finalCheck < f1.finalStates.Length; finalCheck++)
+                                    {
+                                        string singlechar = Sx[f];
+                                        for (int s = 0; s < singlechar.Length; s++)
+                                        {
+                                            if (Convert.ToInt32(singlechar[s] - 48) == f1.finalStates[finalCheck])
+                                            {
+                                                Sx[f] += f1.initialState.ToString();
+                                            }
+                                        }
+                                    }
+
+                                    bool flag_sycheck = true;
+                                    for (int checkSy = 0; checkSy < trans_indexX.Count; checkSy++)
+                                    {
+                                        if (Sx[trans_indexX[checkSy]] == Sx[f])
+                                        {
+                                            flag_sycheck = false;
+                                        }
+                                    }
+                                    if (flag_sycheck == true)
+                                    {
+                                        trans_indexX.Add(f);
+                                    }
+                                    break;
+                                }
+                            }
+
+                        }
+                        string outcomestate = Sx[trans_indexX[0]];
+                        for (int i = 1; i < trans_indexX.Count; i++)
+                        {
+                            outcomestate += Sx[trans_indexX[i]].ToString();
+                        }
+                        outcomestate = sortstring(outcomestate);
+                        bool flag = false;
+                        int itrate = 0;
+
+                        foreach (string s in states)
+                        {
+                            if (s == outcomestate)
+                            {
+                                flag = true;
+                                break;
+                            }
+                            else
+                            {
+                                flag = false;
+                            }
+                            itrate++;
+                        }
+                        if (!flag)
+                        {
+                            states.Add(outcomestate);
+                        }
+                        ttArray[j] = itrate;
+                    }
+                    Zstate.Add(ttArray);
+                }
+                
+            TransitionTable = new int[Zstate.Count, inputCharacters.Length];
+
+
+                for (int i = 0; i < Zstate.Count; i++)
+                {
+                    int[] current = Zstate[i];
+                    for (int j = 0; j < inputCharacters.Length; j++)
+                    {
+                        TransitionTable[i, j] = current[j];
+                    }
+                }
+
+
+                this.Finalstates = GetfinalstateAND(f1.finalStates, states,"C");
+                //this.Finalstates[0] = 0;
+                DFA f3 = new DFA(TransitionTable, this.Finalstates, inputCharacters, initialState);
+                return f3;
+                
+        }
+
+        public DFA Compliment(DFA f1)
+        {
+            this.TransitionTable = f1.TransitionTable;
+            this.inputCharacters = f1.inputCharacters;
+            this.initialState = f1.initialState;
+            List<int> tempfinalState = new List<int>();
+            
+            for(int i=0;i<f1.TransitionTable.GetLength(0);i++)
+            {
+                bool flag = true;
+                for(int j=0;j<f1.finalStates.Length;j++)
+                {
+                    if(i == f1.finalStates[j])
+                    {
+                        flag = false;
+                    }
+                }
+                if(flag)
+                {
+                    tempfinalState.Add(i);
+                }
+            }
+            int[] finalStateArray = new int[tempfinalState.Count];
+            for (int i = 0; i < tempfinalState.Count; i++)
+            {
+                finalStateArray[i] = tempfinalState[i];
+            }
+            this.Finalstates = finalStateArray;
+
+            DFA f3 = new DFA(TransitionTable, Finalstates, inputCharacters, initialState);
+            return f3;
+        }
+
+        public DFA intersection(DFA f1,DFA f2)
+        {
+            DFA compf1 = Compliment(f1);
+            DFA compf2 = Compliment(f2);
+
+            DFA Or = OR(compf1, compf2);
+            DFA compOr = Compliment(Or);
+
+            return compOr;
+        }
+
+        public int[] GetfinalstateOR(int[] final1, int[] final2, List<string> states)
+        {
+            string single;
+            List<int> retFS = new List<int>();
+            for (int i = 0; i < states.Count; i++)
+            {
+                single = states[i];
+                for (int s = 0; s < single.Length; s++)
+                {
+                    if (s == 0)
+                    {
+                        bool temp = false;
+                        for (int j = 0; j < final1.Length; j++)
+                        {
+                            if (Convert.ToInt32(single[s]) - 48 == final1[j])
+                            {
+                                retFS.Add(i);
+                                temp = true;
+                                break;
+                            }
+
+                            if (temp)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int j = 0; j < final2.Length; j++)
+                        {
+
+                            if (Convert.ToInt32(single[s]) - 48 == final2[j])
+                            {
+                                bool flag = true;
+                                for (int k = 0; k < retFS.Count; k++)
+                                {
+                                    if (retFS[k] == i)
+                                    {
+                                        flag = false;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    retFS.Add(i);
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            int[] returnArray = new int[retFS.Count];
+            for (int i = 0; i < retFS.Count; i++)
+            {
+                returnArray[i] = retFS[i];
+            }
+            return returnArray;
+        }
+
+        public int[] GetfinalstateAND(int[] final, List<string> states,string type)
+        {
+            
+            string single;
+            List<int> retFS = new List<int>();
+            if (type == "C")
+            {
+                retFS.Add(0);
+            }
+            for (int i = 0; i < states.Count; i++)
+            {
+                single = states[i];
+                bool temp = false;
+                for (int j = 0; j < final.Length; j++)
+                {
+                    for (int s = 1; s < single.Length; s++)
+                    {
+                        if (Convert.ToInt32(single[s]) - 48 == final[j])
+                        {
+
+                            retFS.Add(i);
+                            temp = true;
+                            break;
+                        }
+                    }
+                    if(temp)
+                    {
+                        break;
+                    }
+                }
+            }
+            int[] returnArray = new int[retFS.Count];
+            for (int i = 0; i < retFS.Count; i++)
+            {
+                returnArray[i] = retFS[i];
+            }
+            return returnArray;
+        }
+
+
+        public void displayDFA()
+        {
+            Console.WriteLine("Transition Table");
+
+            for (int i = 0; i < TransitionTable.GetLength(0); i++)
+            {
+                Console.Write("S" + i + "\t");
+                for (int j = 0; j < TransitionTable.GetLength(1); j++)
+                {
+                    Console.Write(TransitionTable[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("InputCharacters");
+            for (int i = 0; i < inputCharacters.Length; i++)
+            {
+                Console.Write(inputCharacters[i] + "  ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Initial State = " + initialState);
+
+            Console.WriteLine("final states:");
+            for (int i = 0; i < Finalstates.Length; i++)
+            {
+                Console.Write(Finalstates[i] + "  ");
+            }
+            Console.WriteLine();
+        }
+        public string sortstring(string ab)
+        {
+            char[] tempchar = ab.ToCharArray();
+            Array.Sort(tempchar);
+            string a = new string(tempchar);
+            return a;
+        }
+    }
+}
