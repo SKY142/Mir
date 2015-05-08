@@ -1,0 +1,16 @@
+c:\users\sky\documents\visual studio 2012\Projects\DSM\DSM\bin\Debug\DSM.exe.config
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\bin\Debug\DSM.exe
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\bin\Debug\DSM.pdb
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.csprojResolveAssemblyReference.cache
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.AdminFormcs.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Customer.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Done.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Employee.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Form1.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Product.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Properties.Resources.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Supplier.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.Transaction.resources
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.csproj.GenerateResource.Cache
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.exe
+C:\Users\SKY\Documents\Visual Studio 2012\Projects\DSM\DSM\obj\Debug\DSM.pdb
