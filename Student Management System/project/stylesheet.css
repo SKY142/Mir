@@ -1,0 +1,22 @@
+#mainBody {
+    background-color: darkgoldenrod;
+}
+#tableBorder {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: left;
+    width: 500px;
+}
+#tableBorder th {
+    border: 1px solid black;
+    padding: 10px;
+    padding-left: 5px ;
+}
+#tableBorder td {
+    border: 1px solid black;
+    padding-left: 5px ;
+}
+#image {
+    width: 100%;
+    height: 300px;
+}

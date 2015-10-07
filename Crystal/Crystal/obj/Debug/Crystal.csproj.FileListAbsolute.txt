@@ -1,0 +1,6 @@
+c:\users\sky\documents\visual studio 2012\Projects\Crystal\Crystal\bin\Debug\Crystal.exe.config
+C:\Users\SKY\documents\visual studio 2012\Projects\Crystal\Crystal\bin\Debug\Crystal.exe
+C:\Users\SKY\documents\visual studio 2012\Projects\Crystal\Crystal\bin\Debug\Crystal.pdb
+C:\Users\SKY\documents\visual studio 2012\Projects\Crystal\Crystal\obj\Debug\Crystal.csprojResolveAssemblyReference.cache
+C:\Users\SKY\documents\visual studio 2012\Projects\Crystal\Crystal\obj\Debug\Crystal.exe
+C:\Users\SKY\documents\visual studio 2012\Projects\Crystal\Crystal\obj\Debug\Crystal.pdb
